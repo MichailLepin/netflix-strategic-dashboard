@@ -9,7 +9,7 @@
 
 - [x] **DASH-01**: Dashboard displays concise title and Netflix logo
 - [x] **DASH-02**: Single-screen layout (no scrolling required for key information)
-- [ ] **DASH-03**: Dashboard deployed to Streamlit Cloud with public URL
+- [x] **DASH-03**: Dashboard deployed to Streamlit Cloud with public URL
 
 ### KPIs
 
@@ -40,8 +40,8 @@
 
 ### Deliverables
 
-- [ ] **DLVR-01**: Alarm descriptions documented (triggers + thresholds)
-- [ ] **DLVR-02**: Word file with business requirements, data prep notes, screenshot, link, alarm description
+- [x] **DLVR-01**: Alarm descriptions documented (triggers + thresholds)
+- [x] **DLVR-02**: Word file with business requirements, data prep notes, screenshot, link, alarm description
 
 ## v2 Requirements
 
@@ -92,9 +92,9 @@
 | VIZ-02 | Phase 3 | Complete |
 | VIZ-03 | Phase 3 | Complete |
 | VIZ-04 | Phase 3 | Complete |
-| DASH-03 | Phase 4 | Pending |
-| DLVR-01 | Phase 4 | Pending |
-| DLVR-02 | Phase 4 | Pending |
+| DASH-03 | Phase 4 | Complete |
+| DLVR-01 | Phase 4 | Complete |
+| DLVR-02 | Phase 4 | Complete |
 
 **Coverage:**
 - v1 requirements: 20 total
