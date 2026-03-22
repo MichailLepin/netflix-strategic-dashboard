@@ -159,49 +159,43 @@ def create_device_donut(watch_df: pd.DataFrame) -> go.Figure:
     return fig
 
 
-def create_rating_scatter(
-    watch_df: pd.DataFrame, movies_df: pd.DataFrame
-) -> go.Figure:
-    """Watch duration vs IMDb rating scatter plot.
+def create_subscription_bar(users_df: pd.DataFrame) -> go.Figure:
+    """User count by subscription plan (vertical bar chart).
 
     Parameters
     ----------
-    watch_df : filtered watch_history DataFrame
-    movies_df : movies DataFrame (unfiltered, for rating and genre lookup)
+    users_df : filtered users DataFrame
 
     Returns
     -------
-    Plotly Figure (scatter plot)
+    Plotly Figure (bar chart)
     """
-    if len(watch_df) == 0:
+    if len(users_df) == 0:
         return _empty_figure()
 
-    merged = watch_df.merge(
-        movies_df[["movie_id", "imdb_rating", "genre_primary"]],
-        on="movie_id", how="left",
-    )
-
-    # Aggregate per movie: mean watch duration, session count, first rating/genre
-    agg = (
-        merged
-        .groupby("movie_id", observed=True)
-        .agg(
-            avg_watch_min=("watch_duration_minutes", "mean"),
-            session_count=("watch_duration_minutes", "count"),
-            imdb_rating=("imdb_rating", "first"),
-            genre=("genre_primary", "first"),
-        )
+    plan_counts = (
+        users_df["subscription_plan"]
+        .value_counts()
+        .sort_index()
         .reset_index()
     )
+    plan_counts.columns = ["plan", "users"]
 
-    fig = px.scatter(
-        agg, x="imdb_rating", y="avg_watch_min",
-        size="session_count", color="genre",
-        size_max=20,
-        title="Watch Duration vs IMDb Rating",
+    _PLAN_COLORS = {
+        "Basic": "#564D4D",
+        "Standard": "#B20710",
+        "Premium": "#E50914",
+        "Premium+": "#FF6B6B",
+    }
+
+    fig = px.bar(
+        plan_counts, x="plan", y="users",
+        color="plan",
+        color_discrete_map=_PLAN_COLORS,
+        title="Users by Subscription Plan",
     )
     fig.update_layout(**_LAYOUT_DEFAULTS)
-    fig.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3))
+    fig.update_layout(showlegend=False)
     fig.update_xaxes(showgrid=False)
     fig.update_yaxes(showgrid=False)
     return fig

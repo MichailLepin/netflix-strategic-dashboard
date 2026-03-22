@@ -10,7 +10,7 @@ st.set_page_config(
 from src.data_loader import load_data
 from src.filter import apply_filters
 from src.kpis import compute_kpis, get_alarm_level
-from src.charts import create_engagement_line, create_genre_bar, create_device_donut, create_rating_scatter
+from src.charts import create_engagement_line, create_genre_bar, create_device_donut, create_subscription_bar
 
 # Load data (cached)
 data = load_data()
@@ -207,5 +207,5 @@ with chart_col3:
     fig_donut = create_device_donut(filtered["watch"])
     st.plotly_chart(fig_donut, use_container_width=True)
 with chart_col4:
-    fig_scatter = create_rating_scatter(filtered["watch"], data["movies"])
-    st.plotly_chart(fig_scatter, use_container_width=True)
+    fig_subs = create_subscription_bar(filtered["users"])
+    st.plotly_chart(fig_subs, use_container_width=True)
