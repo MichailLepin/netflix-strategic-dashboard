@@ -73,10 +73,11 @@ Plans:
   2. App loads within 60 seconds from a cold start (account for Streamlit Community Cloud sleep behavior)
   3. Alarm thresholds are documented in the dashboard (visible descriptions or legend) and in the Word file
   4. Word file contains: business requirements, data preparation notes, dashboard screenshot taken from the deployed URL (not localhost), public link, and alarm description
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: Deploy to Streamlit Cloud and complete Word deliverable
+- [ ] 04-01-PLAN.md — Prepare deployment files, add alarm descriptions to dashboard, generate Word deliverable
+- [ ] 04-02-PLAN.md — Deploy to Streamlit Cloud and finalize Word file with screenshot and link
 
 ## Progress
 
@@ -88,4 +89,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Data Foundation | 0/1 | Complete    | 2026-03-22 |
 | 2. Dashboard Skeleton, Filters, and KPIs | 2/2 | Complete    | 2026-03-22 |
 | 3. Charts and Complete Layout | 0/1 | Complete    | 2026-03-22 |
-| 4. Deploy and Word Deliverable | 0/1 | Not started | - |
+| 4. Deploy and Word Deliverable | 0/2 | Not started | - |
