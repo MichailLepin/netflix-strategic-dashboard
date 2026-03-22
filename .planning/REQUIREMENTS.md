@@ -20,10 +20,10 @@
 
 ### Visualizations
 
-- [ ] **VIZ-01**: Line chart showing engagement trends over time
-- [ ] **VIZ-02**: Horizontal bar chart showing top genres by watch time
-- [ ] **VIZ-03**: Pie/donut chart showing device type distribution
-- [ ] **VIZ-04**: Scatter plot showing watch time vs content rating
+- [x] **VIZ-01**: Line chart showing engagement trends over time
+- [x] **VIZ-02**: Horizontal bar chart showing top genres by watch time
+- [x] **VIZ-03**: Pie/donut chart showing device type distribution
+- [x] **VIZ-04**: Scatter plot showing watch time vs content rating
 
 ### Filters
 
@@ -88,10 +88,10 @@
 | FLT-02 | Phase 2 | Complete |
 | FLT-03 | Phase 2 | Complete |
 | FLT-04 | Phase 2 | Complete |
-| VIZ-01 | Phase 3 | Pending |
-| VIZ-02 | Phase 3 | Pending |
-| VIZ-03 | Phase 3 | Pending |
-| VIZ-04 | Phase 3 | Pending |
+| VIZ-01 | Phase 3 | Complete |
+| VIZ-02 | Phase 3 | Complete |
+| VIZ-03 | Phase 3 | Complete |
+| VIZ-04 | Phase 3 | Complete |
 | DASH-03 | Phase 4 | Pending |
 | DLVR-01 | Phase 4 | Pending |
 | DLVR-02 | Phase 4 | Pending |
