@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Data Foundation** - Load, clean, type-cast, join, and validate all 6 CSV tables; confirm memory footprint and GitHub file size safety (completed 2026-03-22)
 - [x] **Phase 2: Dashboard Skeleton, Filters, and KPIs** - Build the app shell with Netflix branding, sidebar filters, and all 4 KPI scorecard tiles wired to live data (completed 2026-03-22)
 - [x] **Phase 3: Charts and Complete Layout** - Implement all 4 Plotly charts inside the column grid to produce the finished single-screen dashboard (completed 2026-03-22)
-- [ ] **Phase 4: Deploy and Word Deliverable** - Deploy to Streamlit Cloud, verify all assignment checklist items, and complete the Word file
+- [x] **Phase 4: Deploy and Word Deliverable** - Deploy to Streamlit Cloud, verify all assignment checklist items, and complete the Word file (completed 2026-03-22)
 
 ## Phase Details
 
@@ -89,4 +89,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Data Foundation | 0/1 | Complete    | 2026-03-22 |
 | 2. Dashboard Skeleton, Filters, and KPIs | 2/2 | Complete    | 2026-03-22 |
 | 3. Charts and Complete Layout | 0/1 | Complete    | 2026-03-22 |
-| 4. Deploy and Word Deliverable | 0/2 | Not started | - |
+| 4. Deploy and Word Deliverable | 2/2 | Complete    | 2026-03-22 |
