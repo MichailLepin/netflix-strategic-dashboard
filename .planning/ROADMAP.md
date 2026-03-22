@@ -29,10 +29,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Join key cardinality check passes: at least 80% of watch_history user_ids exist in users table
   4. `ls -lh data/` shows no individual CSV file exceeds 90MB (safe for GitHub)
   5. `@st.cache_data` wraps all loading logic so repeated calls return immediately without re-reading disk
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 01-01: Repository setup, dataset download, and data loading
+- [ ] 01-01-PLAN.md — Project setup, dataset download, data loading with cleaning/validation/caching
 
 ### Phase 2: Dashboard Skeleton, Filters, and KPIs
 **Goal**: A running Streamlit app showing the Netflix logo, dashboard title, sidebar filters wired to live data, and 4 KPI scorecard tiles that update correctly when filters change.
