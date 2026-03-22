@@ -10,6 +10,7 @@ st.set_page_config(
 from src.data_loader import load_data
 from src.filter import apply_filters
 from src.kpis import compute_kpis, get_alarm_level
+from src.charts import create_engagement_line, create_genre_bar, create_device_donut, create_rating_scatter
 
 # Load data (cached)
 data = load_data()
@@ -172,12 +173,16 @@ st.subheader("Content & Engagement Analytics")
 
 chart_col1, chart_col2 = st.columns(2)
 with chart_col1:
-    st.info("Chart: Engagement Trends Over Time (Phase 3)")
+    fig_line = create_engagement_line(filtered["watch"], filtered["users"])
+    st.plotly_chart(fig_line, use_container_width=True)
 with chart_col2:
-    st.info("Chart: Top Genres by Watch Time (Phase 3)")
+    fig_bar = create_genre_bar(filtered["watch"], data["movies"])
+    st.plotly_chart(fig_bar, use_container_width=True)
 
 chart_col3, chart_col4 = st.columns(2)
 with chart_col3:
-    st.info("Chart: Device Type Distribution (Phase 3)")
+    fig_donut = create_device_donut(filtered["watch"])
+    st.plotly_chart(fig_donut, use_container_width=True)
 with chart_col4:
-    st.info("Chart: Watch Time vs Content Rating (Phase 3)")
+    fig_scatter = create_rating_scatter(filtered["watch"], data["movies"])
+    st.plotly_chart(fig_scatter, use_container_width=True)
