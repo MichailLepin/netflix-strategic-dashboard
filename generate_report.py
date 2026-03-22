@@ -203,10 +203,13 @@ def generate_report():
     # =========================================================================
     doc.add_heading("3. Dashboard Screenshot", level=1)
 
+    doc.add_paragraph(
+        "Screenshot of the deployed dashboard (captured from Streamlit Cloud URL):"
+    )
     p = doc.add_paragraph()
     run = p.add_run(
-        "[INSERT SCREENSHOT: Take a screenshot of the dashboard from the deployed "
-        "Streamlit Cloud URL (not localhost) and paste it here]"
+        "[INSERT SCREENSHOT HERE — take a screenshot of the live dashboard at the "
+        "URL below and paste it into this location]"
     )
     run.italic = True
     run.font.color.rgb = RGBColor(200, 0, 0)
@@ -217,8 +220,10 @@ def generate_report():
     doc.add_heading("4. Public Link", level=1)
 
     doc.add_paragraph(
-        "[INSERT LINK: Paste your Streamlit Cloud URL here, e.g., "
-        "https://netflix-strategic-dashboard.streamlit.app]"
+        "Dashboard URL: https://netflix-strategic-dashboard-mox8snlruuhsug8zwtrvsa.streamlit.app/"
+    )
+    doc.add_paragraph(
+        "Repository: https://github.com/michaillepin/netflix-strategic-dashboard/blob/master/app.py"
     )
 
     # =========================================================================
@@ -246,8 +251,8 @@ def generate_report():
         "All filters apply simultaneously to all KPIs and charts.",
 
         "KPI Scorecard Row (4 metric tiles): Avg Session Time (1.6 hrs overall), "
-        "Content Completion Rate (51.6% overall), Recommendation CTR (23.4% overall), "
-        "and Churn Rate (6.9% overall). Each tile shows a color-coded alarm border "
+        "Content Completion Rate (51.5% overall), Recommendation CTR (23.3% overall), "
+        "and Churn Rate (6.8% overall). Each tile shows a color-coded alarm border "
         "and delta indicator when filters are active.",
 
         "Chart 1 — Monthly Engagement Trend (Dual-axis Line Chart): "
@@ -258,7 +263,7 @@ def generate_report():
         "Answers: 'Is engagement improving over time?'",
 
         "Chart 2 — Churn Rate by Subscription Plan (Vertical Bar Chart): "
-        "Shows churn risk across subscription tiers. Basic plan shows 13.6% churn "
+        "Shows churn risk across subscription tiers. Basic plan shows 13.5% churn "
         "(red — critical), while Premium+ shows only 3.0% (green — healthy). "
         "Color-coded bars make risk levels immediately visible. "
         "Answers: 'Which segments are we losing? Where to invest in retention?'",
@@ -270,7 +275,7 @@ def generate_report():
 
         "Chart 4 — Recommendation CTR by Algorithm Type (Horizontal Bar Chart): "
         "Compares click-through rates across recommendation strategies. Personalized "
-        "recommendations lead at 36.6% (green), followed by Genre-Based (28.0%), "
+        "recommendations lead at 36.4% (green), followed by Genre-Based (28.1%), "
         "Trending (22.1%), New Releases (17.1%), and Similar Users (12.7%). "
         "Directly ties to the case study: 'Which algorithm produces the best predictions?'",
     ]
@@ -301,7 +306,7 @@ def generate_report():
     doc.add_paragraph("")
     doc.add_paragraph(
         "Example alarm scenario: When filtering by 'Basic' subscription tier, "
-        "the Churn Rate KPI turns YELLOW (13.6%, within the 15-25% warning zone), "
+        "the Churn Rate KPI turns YELLOW (13.5%, within the 15-25% warning zone), "
         "while Avg Session Time drops to 1.1 hrs (also YELLOW). This signals that "
         "Basic subscribers are less engaged and at moderate churn risk. The recommended "
         "action is to investigate the Basic plan value proposition and consider "
@@ -374,11 +379,11 @@ def generate_report():
     doc.add_heading("Before vs After Enrichment", level=2)
     comparison_headers = ["Metric", "Before (Kaggle Original)", "After (Enriched)"]
     comparison_rows = [
-        ("Churn Rate (Basic)", "~15%", "13.6%"),
+        ("Churn Rate (Basic)", "~15%", "13.5%"),
         ("Churn Rate (Premium+)", "~15%", "3.0%"),
         ("Avg Session (Smart TV)", "1.1 hrs", "2.57 hrs"),
         ("Avg Session (Mobile)", "1.1 hrs", "0.85 hrs"),
-        ("Rec CTR (Personalized)", "~15%", "36.6%"),
+        ("Rec CTR (Personalized)", "~15%", "36.4%"),
         ("Rec CTR (Similar Users)", "~15%", "12.7%"),
         ("Completion (Movie)", "~10%", "70.5%"),
         ("Completion (Documentary)", "~10%", "12.4%"),

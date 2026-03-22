@@ -1,4 +1,4 @@
-streamlit==1.55.0
-plotly==6.6.0
-pandas==2.3.3
+streamlit
+plotly
+pandas
 python-docx
