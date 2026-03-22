@@ -7,8 +7,8 @@
 
 ### Dashboard Core
 
-- [ ] **DASH-01**: Dashboard displays concise title and Netflix logo
-- [ ] **DASH-02**: Single-screen layout (no scrolling required for key information)
+- [x] **DASH-01**: Dashboard displays concise title and Netflix logo
+- [x] **DASH-02**: Single-screen layout (no scrolling required for key information)
 - [ ] **DASH-03**: Dashboard deployed to Streamlit Cloud with public URL
 
 ### KPIs
@@ -78,8 +78,8 @@
 | DATA-01 | Phase 1 | Complete |
 | DATA-02 | Phase 1 | Complete |
 | DATA-03 | Phase 1 | Complete |
-| DASH-01 | Phase 2 | Pending |
-| DASH-02 | Phase 2 | Pending |
+| DASH-01 | Phase 2 | Complete |
+| DASH-02 | Phase 2 | Complete |
 | KPI-01 | Phase 2 | Pending |
 | KPI-02 | Phase 2 | Pending |
 | KPI-03 | Phase 2 | Pending |
