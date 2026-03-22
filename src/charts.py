@@ -51,7 +51,9 @@ def create_engagement_trend(watch_df: pd.DataFrame) -> go.Figure:
         return _empty_figure()
 
     df = watch_df.copy()
-    df["month"] = df["watch_date"].dt.to_period("M").dt.to_timestamp()
+    df["watch_date"] = pd.to_datetime(df["watch_date"], errors="coerce")
+    df = df.dropna(subset=["watch_date"])
+    df["month"] = df["watch_date"].values.astype("datetime64[M]")
     df["completed"] = df["progress_percentage"] >= 90
 
     monthly = (

@@ -86,10 +86,10 @@ def generate_report():
 
     doc.add_heading("Key Questions the Dashboard Answers", level=2)
     questions = [
-        "Which content genres and types (Movies, TV Series, Documentaries) drive the highest engagement?",
-        "How effective are different recommendation types (personalized vs trending vs genre-based) at driving clicks?",
+        "Is user engagement (completion rate, session time) improving over time? Are there seasonal patterns to account for?",
+        "How effective are different recommendation algorithms (personalized vs trending vs genre-based) at driving clicks?",
         "Which subscription segments (Basic, Standard, Premium, Premium+) show the highest churn risk?",
-        "How do viewing patterns differ across devices (Smart TV vs Mobile vs Desktop)?",
+        "How do viewing engagement patterns differ across devices (Smart TV vs Mobile vs Desktop)?",
     ]
     for q in questions:
         doc.add_paragraph(q, style="List Bullet")
@@ -131,19 +131,22 @@ def generate_report():
         "streaming platform dynamics. The following patterns were introduced:"
     )
     enrichment_items = [
-        "Churn correlation with subscription tier: Basic ~29%, Standard ~17%, "
-        "Premium ~10%, Premium+ ~6% (higher-value plans retain better)",
-        "Device-based viewing patterns: Smart TV sessions 1.69 hrs avg vs "
-        "Mobile 0.82 hrs (big screen = longer sessions)",
-        "Seasonal engagement spikes: December/January +30% (holidays), "
-        "July/August +15% (summer binge), February -10%",
-        "Recommendation effectiveness by type: Personalized 29.6% CTR vs "
-        "Similar Users 13.6% CTR (better algorithms = better results)",
-        "Platform growth trend: +20% engagement growth over the 24-month period",
-        "Subscription tier engagement: Premium/Premium+ users watch 25% more, "
-        "Basic users watch 25% less",
-        "Content type completion rates: Movies have higher completion rates "
-        "than documentaries",
+        "Churn correlation with subscription tier: Basic ~14%, Standard ~7%, "
+        "Premium ~4%, Premium+ ~3% — reflecting that higher-value plans retain better",
+        "Device-based viewing patterns: Smart TV sessions 2.57 hrs avg vs "
+        "Mobile 0.85 hrs — big screen enables lean-back, longer sessions",
+        "Seasonal engagement spikes: December/January +30-50% (holiday binge), "
+        "July/August +5-25% (summer), February -10-25% (post-holiday dip)",
+        "Recommendation effectiveness by type: Personalized ~37% CTR vs "
+        "Similar Users ~13% CTR — better algorithms produce better results",
+        "Platform growth trend: +25% engagement growth over the 24-month period, "
+        "simulating a maturing platform with improving content catalog",
+        "Subscription tier engagement: Premium/Premium+ users watch 30% more per session, "
+        "Basic users watch 30% less — reflecting plan value correlation",
+        "Content type completion rates: Movies ~70% completion vs Documentaries ~12% "
+        "— different content formats have different consumption patterns",
+        "Genre engagement: Thriller/Sci-Fi/Drama have 25% higher session time vs "
+        "Documentary/Sport/History — reflecting audience engagement differences",
     ]
     for item in enrichment_items:
         doc.add_paragraph(item, style="List Bullet")
@@ -319,9 +322,73 @@ def generate_report():
     )
 
     # =========================================================================
-    # Section 6: Peer Review
+    # Section 6: Data Enrichment Methodology
     # =========================================================================
-    doc.add_heading("6. Peer Review", level=1)
+    doc.add_heading("6. Data Enrichment Methodology", level=1)
+
+    doc.add_paragraph(
+        "The original Kaggle dataset had uniformly random distributions across all "
+        "dimensions, making it impossible to derive actionable insights. We developed "
+        "a structured AI-assisted enrichment approach to inject realistic streaming "
+        "platform dynamics while preserving the original schema and row counts."
+    )
+
+    doc.add_heading("Enrichment Process", level=2)
+    process_steps = [
+        "Step 1 — Exploratory analysis of the original Kaggle data confirmed flat "
+        "distributions: all KPIs were identical across segments (~15% churn for all "
+        "plans, ~1.1 hrs watch time for all devices, ~15% CTR for all recommendation types).",
+        "Step 2 — We designed a detailed enrichment prompt (data_enrichment_prompt.md, "
+        "included in the repository) specifying realistic business patterns based on "
+        "industry knowledge about streaming platforms.",
+        "Step 3 — The enrichment script (fix_data.py) was generated from the prompt "
+        "and applied multiplicative transformations to 3 of the 6 tables: users.csv "
+        "(churn patterns), watch_history.csv (viewing patterns), and recommendation_logs.csv "
+        "(algorithm effectiveness).",
+        "Step 4 — Validation confirmed that enriched data produces meaningful variance "
+        "across segments while maintaining the original schema, row counts, and data types.",
+    ]
+    for step in process_steps:
+        doc.add_paragraph(step, style="List Bullet")
+
+    doc.add_heading("Enrichment Prompt Summary", level=2)
+    doc.add_paragraph(
+        "The full enrichment prompt is available in the repository as "
+        "data_enrichment_prompt.md. Key design principles:"
+    )
+    prompt_principles = [
+        "All transformations are multiplicative — they shift means while preserving "
+        "distribution shapes, rather than replacing values entirely",
+        "Patterns are based on documented streaming industry dynamics: position bias "
+        "in recommendations, device-based session length differences, seasonal "
+        "viewing patterns, and subscription tier retention curves",
+        "Random seed (42) ensures reproducibility — running fix_data.py on the "
+        "original Kaggle data produces identical results",
+        "3 tables modified (users, watch_history, recommendation_logs), 3 tables "
+        "untouched (movies, search_logs, reviews) — only tables relevant to "
+        "dashboard KPIs were enriched",
+    ]
+    for p in prompt_principles:
+        doc.add_paragraph(p, style="List Bullet")
+
+    doc.add_heading("Before vs After Enrichment", level=2)
+    comparison_headers = ["Metric", "Before (Kaggle Original)", "After (Enriched)"]
+    comparison_rows = [
+        ("Churn Rate (Basic)", "~15%", "13.6%"),
+        ("Churn Rate (Premium+)", "~15%", "3.0%"),
+        ("Avg Session (Smart TV)", "1.1 hrs", "2.57 hrs"),
+        ("Avg Session (Mobile)", "1.1 hrs", "0.85 hrs"),
+        ("Rec CTR (Personalized)", "~15%", "36.6%"),
+        ("Rec CTR (Similar Users)", "~15%", "12.7%"),
+        ("Completion (Movie)", "~10%", "70.5%"),
+        ("Completion (Documentary)", "~10%", "12.4%"),
+    ]
+    add_table(doc, comparison_headers, comparison_rows)
+
+    # =========================================================================
+    # Section 7: Peer Review
+    # =========================================================================
+    doc.add_heading("7. Peer Review", level=1)
 
     doc.add_paragraph(
         "[This section is for reviewing another team's dashboard. "
