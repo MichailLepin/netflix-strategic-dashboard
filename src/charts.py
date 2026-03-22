@@ -159,40 +159,54 @@ def create_device_donut(watch_df: pd.DataFrame) -> go.Figure:
     return fig
 
 
-def create_subscription_bar(users_df: pd.DataFrame) -> go.Figure:
-    """User count by subscription plan (vertical bar chart).
+def create_content_type_bar(
+    watch_df: pd.DataFrame, movies_df: pd.DataFrame
+) -> go.Figure:
+    """Watch sessions by content type (horizontal bar chart).
+
+    Shows how viewing time distributes across Movies, TV Series,
+    Documentaries, etc. Responds meaningfully to genre/device/date filters.
 
     Parameters
     ----------
-    users_df : filtered users DataFrame
+    watch_df : filtered watch_history DataFrame
+    movies_df : movies DataFrame (for content_type lookup)
 
     Returns
     -------
-    Plotly Figure (bar chart)
+    Plotly Figure (horizontal bar chart)
     """
-    if len(users_df) == 0:
+    if len(watch_df) == 0:
         return _empty_figure()
 
-    plan_counts = (
-        users_df["subscription_plan"]
-        .value_counts()
-        .sort_index()
+    merged = watch_df.merge(
+        movies_df[["movie_id", "content_type"]], on="movie_id", how="left"
+    )
+    merged["watch_hours"] = merged["watch_duration_minutes"] / 60.0
+
+    type_totals = (
+        merged
+        .groupby("content_type", observed=True)["watch_hours"]
+        .sum()
+        .sort_values(ascending=True)
         .reset_index()
     )
-    plan_counts.columns = ["plan", "users"]
+    type_totals.columns = ["content_type", "total_hours"]
 
-    _PLAN_COLORS = {
-        "Basic": "#564D4D",
-        "Standard": "#B20710",
-        "Premium": "#E50914",
-        "Premium+": "#FF6B6B",
+    _TYPE_COLORS = {
+        "Movie": "#E50914",
+        "TV Series": "#B20710",
+        "Documentary": "#831010",
+        "Stand-up Comedy": "#FF6B6B",
+        "Limited Series": "#564D4D",
     }
 
     fig = px.bar(
-        plan_counts, x="plan", y="users",
-        color="plan",
-        color_discrete_map=_PLAN_COLORS,
-        title="Users by Subscription Plan",
+        type_totals, x="total_hours", y="content_type",
+        orientation="h",
+        color="content_type",
+        color_discrete_map=_TYPE_COLORS,
+        title="Watch Hours by Content Type",
     )
     fig.update_layout(**_LAYOUT_DEFAULTS)
     fig.update_layout(showlegend=False)
