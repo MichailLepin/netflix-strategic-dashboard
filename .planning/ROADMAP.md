@@ -59,10 +59,10 @@ Plans:
   3. Pie/donut chart showing device type distribution renders and responds to active filters
   4. Scatter plot showing watch time vs. content rating renders and responds to active filters
   5. All charts fit on one screen with no scrolling alongside the KPI row at 1080p 100% zoom
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 03-01: Implement all 4 Plotly charts and wire into layout
+- [ ] 03-01-PLAN.md — Create charts.py module with 4 Plotly chart functions and wire into app.py layout
 
 ### Phase 4: Deploy and Word Deliverable
 **Goal**: The dashboard is publicly accessible on Streamlit Cloud and the Word file contains all required sections with a screenshot of the deployed URL.
