@@ -10,7 +10,10 @@ st.set_page_config(
 from src.data_loader import load_data
 from src.filter import apply_filters
 from src.kpis import compute_kpis, get_alarm_level
-from src.charts import create_engagement_trend, create_churn_by_plan, create_session_by_device, create_rec_effectiveness
+from src.charts import (
+    create_engagement_trend, create_churn_by_plan, create_session_by_device,
+    create_rec_effectiveness, create_completion_donut,
+)
 
 # Load data (cached)
 data = load_data()
@@ -130,6 +133,12 @@ kpi_config = [
         "delta_color": "normal",
     },
     {
+        "key": "active_users",
+        "label": "Active Users",
+        "format": lambda v: f"{v:,.0f}",
+        "delta_color": "normal",
+    },
+    {
         "key": "churn_rate",
         "label": "Churn Rate",
         "format": lambda v: f"{v:.1f}%",
@@ -137,7 +146,7 @@ kpi_config = [
     },
 ]
 
-kpi_cols = st.columns(4)
+kpi_cols = st.columns(5)
 alarm_css_parts = []
 
 for i, (col, cfg) in enumerate(zip(kpi_cols, kpi_config)):
@@ -205,7 +214,7 @@ with chart_col2:
     fig_churn = create_churn_by_plan(filtered["users"])
     st.plotly_chart(fig_churn, use_container_width=True)
 
-chart_col3, chart_col4 = st.columns(2)
+chart_col3, chart_col4, chart_col5 = st.columns(3)
 with chart_col3:
     # Q: "How do engagement patterns differ by device?"
     fig_device = create_session_by_device(filtered["watch"])
@@ -214,3 +223,7 @@ with chart_col4:
     # Q: "Which recommendation algorithm works best?"
     fig_recs = create_rec_effectiveness(filtered["recs"])
     st.plotly_chart(fig_recs, use_container_width=True)
+with chart_col5:
+    # Q: "Which content formats do users finish watching?"
+    fig_donut = create_completion_donut(filtered["watch"], data["movies"])
+    st.plotly_chart(fig_donut, use_container_width=True)

@@ -280,3 +280,53 @@ def create_rec_effectiveness(recs_df: pd.DataFrame) -> go.Figure:
     fig.update_yaxes(showgrid=False)
 
     return fig
+
+
+# ─── Chart 5: Completion by Content Type ────────────────────────────
+# Q: "Which content formats do users actually finish watching?"
+# Maps to: Higher Engagement — content investment decisions
+
+def create_completion_donut(
+    watch_df: pd.DataFrame, movies_df: pd.DataFrame
+) -> go.Figure:
+    """Completion rate by content type (donut chart).
+
+    Movies ~70% completion vs Documentary ~12%.
+    Actionable: invest in formats users finish; improve documentary hooks.
+    """
+    if len(watch_df) == 0:
+        return _empty_figure()
+
+    merged = watch_df.merge(
+        movies_df[["movie_id", "content_type"]], on="movie_id", how="left"
+    )
+    merged["completed"] = merged["progress_percentage"] >= 90
+
+    comp_by_type = (
+        merged.groupby("content_type", observed=True)
+        .agg(
+            completed=("completed", "sum"),
+            total=("completed", "count"),
+        )
+        .reset_index()
+    )
+    comp_by_type["rate"] = (comp_by_type["completed"] / comp_by_type["total"] * 100).round(1)
+    comp_by_type = comp_by_type.sort_values("rate", ascending=False)
+
+    _TYPE_COLORS = ["#2ECC40", "#E50914", "#FF6B6B", "#B20710", "#564D4D"]
+
+    fig = px.pie(
+        comp_by_type, names="content_type", values="rate",
+        hole=0.45,
+        color_discrete_sequence=_TYPE_COLORS,
+        title="Completion Rate by Content Type",
+    )
+    fig.update_traces(
+        textinfo="label+percent",
+        texttemplate="%{label}<br>%{value:.1f}%",
+        hovertemplate="%{label}: %{value:.1f}% completion<extra></extra>",
+    )
+    fig.update_layout(**_LAYOUT_DEFAULTS)
+    fig.update_layout(showlegend=False)
+
+    return fig

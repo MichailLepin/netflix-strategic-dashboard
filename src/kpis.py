@@ -50,11 +50,15 @@ def compute_kpis(filtered: dict[str, pd.DataFrame]) -> dict[str, float]:
     else:
         churn_rate = 0.0
 
+    # KPI-05: Active Users count
+    active_users = int(users["is_active"].sum()) if len(users) > 0 else 0
+
     return {
         "avg_watch_hours": avg_watch_hours,
         "completion_rate": completion_rate,
         "rec_ctr": rec_ctr,
         "churn_rate": churn_rate,
+        "active_users": active_users,
     }
 
 
@@ -95,5 +99,12 @@ def get_alarm_level(kpi_name: str, value: float) -> str:
             return "yellow"
         else:
             return "red"
+    elif kpi_name == "active_users":
+        if value > 8000:
+            return "green"
+        elif value >= 5000:
+            return "yellow"
+        else:
+            return "red"
     else:
-        return "yellow"  # Unknown KPI defaults to warning
+        return "yellow"

@@ -390,9 +390,65 @@ def generate_report():
     # =========================================================================
     doc.add_heading("7. Peer Review", level=1)
 
+    doc.add_heading("Dashboard Reviewed", level=2)
     doc.add_paragraph(
-        "[This section is for reviewing another team's dashboard. "
-        "Fill in using the provided peer review template.]"
+        "Team: Marko Kolarevic, Dimitrije Dragicevic\n"
+        "Dashboard: Global Music Performance & Genre Trends (Universal Music Group)\n"
+        "Link: https://koyara.netlify.app/\n"
+        "Tool: Custom web application (Netlify deployment)"
+    )
+
+    doc.add_heading("Overall Impression", level=2)
+    doc.add_paragraph(
+        "A well-designed strategic dashboard that effectively monitors the global "
+        "music industry performance for Universal Music Group. The dashboard presents "
+        "a clear business narrative: tracking revenue across genres, regions, and "
+        "release types (singles vs albums) to inform content investment decisions."
+    )
+
+    doc.add_heading("Strengths", level=2)
+    strengths = [
+        "Professional visual design with consistent typography, organized grid layout, "
+        "and a sophisticated color palette (gold accents, dark headers) that feels "
+        "appropriate for a premium entertainment brand.",
+        "Good variety of visualization types: line chart (genre trends over time), "
+        "doughnut chart (market share), horizontal bar (regional revenue), stacked bar "
+        "(single vs album by genre), and data table (top releases). This diversity "
+        "makes the dashboard informative and visually engaging.",
+        "5 well-chosen KPIs (Total Revenue, YoY Growth, Top Genre, Top Region, "
+        "Single:Album Ratio) that directly support strategic decision-making.",
+        "Comprehensive filter system (year, genre, region, release type, release name "
+        "search) with 5 controls that enable deep drill-down analysis.",
+        "Alarm/alert triggers are thoughtfully designed: YoY growth below 0%, "
+        "regional drops exceeding 20%, genre share below 5%. These are actionable "
+        "thresholds tied to real business decisions.",
+    ]
+    for s in strengths:
+        doc.add_paragraph(s, style="List Bullet")
+
+    doc.add_heading("Areas for Improvement", level=2)
+    improvements = [
+        "The dashboard could benefit from a time period filter (date range picker) "
+        "in addition to the year dropdown, allowing analysis of specific quarters "
+        "or months within a year for more granular seasonal insights.",
+        "The Top Releases table, while informative, takes significant screen space. "
+        "Consider making it collapsible or moving it to a secondary view to keep "
+        "the main screen more focused on visual analytics.",
+        "Consider adding a trend indicator (up/down arrow with percentage) next to "
+        "each KPI to show direction of change at a glance, similar to sparklines "
+        "used in financial dashboards.",
+    ]
+    for i in improvements:
+        doc.add_paragraph(i, style="List Bullet")
+
+    doc.add_heading("Conclusion", level=2)
+    doc.add_paragraph(
+        "Overall, this is a strong dashboard that demonstrates solid understanding "
+        "of BI principles. The combination of clear business framing, appropriate "
+        "visualization choices, and actionable alarm thresholds makes it a useful "
+        "decision-making tool for music industry executives. The custom web deployment "
+        "shows technical ambition beyond standard BI tools, and the result is polished "
+        "and professional. Score: 8/10."
     )
 
     # --- Save ---
