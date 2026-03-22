@@ -10,7 +10,7 @@ st.set_page_config(
 from src.data_loader import load_data
 from src.filter import apply_filters
 from src.kpis import compute_kpis, get_alarm_level
-from src.charts import create_engagement_line, create_genre_bar, create_device_donut, create_rec_effectiveness_bar
+from src.charts import create_engagement_trend, create_churn_by_plan, create_session_by_device, create_rec_effectiveness
 
 # Load data (cached)
 data = load_data()
@@ -190,22 +190,27 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Chart Grid placeholder ---
+# --- Chart Grid: Value Logic Chain ───────────────────────────────
+# Better Predictions → Higher Engagement → Lower Churn → Revenue Growth
 st.markdown("---")
-st.subheader("Content & Engagement Analytics")
+st.subheader("Recommendation Engine & Engagement Analytics")
 
 chart_col1, chart_col2 = st.columns(2)
 with chart_col1:
-    fig_line = create_engagement_line(filtered["watch"], filtered["users"])
-    st.plotly_chart(fig_line, use_container_width=True)
+    # Q: "Is engagement improving? Seasonal patterns?"
+    fig_trend = create_engagement_trend(filtered["watch"])
+    st.plotly_chart(fig_trend, use_container_width=True)
 with chart_col2:
-    fig_bar = create_genre_bar(filtered["watch"], data["movies"])
-    st.plotly_chart(fig_bar, use_container_width=True)
+    # Q: "Which segments are at highest churn risk?"
+    fig_churn = create_churn_by_plan(filtered["users"])
+    st.plotly_chart(fig_churn, use_container_width=True)
 
 chart_col3, chart_col4 = st.columns(2)
 with chart_col3:
-    fig_donut = create_device_donut(filtered["watch"])
-    st.plotly_chart(fig_donut, use_container_width=True)
+    # Q: "How do engagement patterns differ by device?"
+    fig_device = create_session_by_device(filtered["watch"])
+    st.plotly_chart(fig_device, use_container_width=True)
 with chart_col4:
-    fig_recs = create_rec_effectiveness_bar(filtered["recs"])
+    # Q: "Which recommendation algorithm works best?"
+    fig_recs = create_rec_effectiveness(filtered["recs"])
     st.plotly_chart(fig_recs, use_container_width=True)

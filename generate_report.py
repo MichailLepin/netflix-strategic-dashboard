@@ -247,26 +247,29 @@ def generate_report():
         "and Churn Rate (6.9% overall). Each tile shows a color-coded alarm border "
         "and delta indicator when filters are active.",
 
-        "Chart 1 — Weekly Watch Hours by Subscription Plan (Line Chart): "
-        "Shows engagement trends over the 24-month period, segmented by "
-        "subscription tier. Reveals seasonal patterns (holiday spikes in Dec/Jan) "
-        "and the platform growth trend.",
+        "Chart 1 — Monthly Engagement Trend (Dual-axis Line Chart): "
+        "Tracks completion rate (%) and average session time (hrs) over the "
+        "24-month period. Reveals seasonal patterns: holiday spikes in Dec/Jan, "
+        "summer boost in Jul/Aug, and Feb dip. Completion rate is the key ML "
+        "target P(completion) from the recommendation engine case study. "
+        "Answers: 'Is engagement improving over time?'",
 
-        "Chart 2 — Top 10 Genres by Watch Time (Horizontal Bar Chart): "
-        "Ranks content genres by total viewing hours. Sci-Fi leads with "
-        "11,836 hours, followed by Adventure (11,517) and Animation (10,266). "
-        "Actionable for content acquisition decisions.",
+        "Chart 2 — Churn Rate by Subscription Plan (Vertical Bar Chart): "
+        "Shows churn risk across subscription tiers. Basic plan shows 13.6% churn "
+        "(red — critical), while Premium+ shows only 3.0% (green — healthy). "
+        "Color-coded bars make risk levels immediately visible. "
+        "Answers: 'Which segments are we losing? Where to invest in retention?'",
 
-        "Chart 3 — Watch Sessions by Device (Donut Chart): "
-        "Displays device distribution. Sessions are roughly equal across devices "
-        "but Smart TV users watch significantly longer per session (1.69 hrs vs "
-        "Mobile 0.82 hrs).",
+        "Chart 3 — Avg Session Duration by Device (Horizontal Bar Chart): "
+        "Compares average viewing session length across devices. Smart TV leads "
+        "at 2.57 hrs (green) while Mobile is shortest at 0.85 hrs (red). "
+        "Answers: 'Where is engagement strongest? Which platform UX needs investment?'",
 
         "Chart 4 — Recommendation CTR by Algorithm Type (Horizontal Bar Chart): "
         "Compares click-through rates across recommendation strategies. Personalized "
-        "recommendations lead at 36.6%, followed by Genre-Based (28.0%), Trending (22.1%), "
-        "New Releases (17.1%), and Similar Users (12.7%). Directly supports the Netflix "
-        "recommendation engine optimization case study.",
+        "recommendations lead at 36.6% (green), followed by Genre-Based (28.0%), "
+        "Trending (22.1%), New Releases (17.1%), and Similar Users (12.7%). "
+        "Directly ties to the case study: 'Which algorithm produces the best predictions?'",
     ]
     for elem in elements:
         doc.add_paragraph(elem, style="List Bullet")

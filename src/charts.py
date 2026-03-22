@@ -1,7 +1,11 @@
 """Chart-building functions for the Netflix Strategic Dashboard.
 
-Pure functions that accept filtered DataFrames and return Plotly figures.
-No Streamlit calls — only plotly.express for chart construction.
+Each chart answers a specific business question tied to the
+Netflix recommendation engine case study value logic chain:
+
+  Better Predictions → Higher Engagement → Lower Churn → Revenue Growth
+
+Pure functions: accept filtered DataFrames, return Plotly figures.
 """
 
 import pandas as pd
@@ -9,18 +13,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 
-# Netflix-themed color palettes
-_GENRE_COLORS = [
-    "#E50914", "#B20710", "#831010", "#5C0A0A", "#FF6B6B",
-    "#FF9999", "#CC3333", "#993333", "#660000", "#330000",
-]
-_DEVICE_COLORS = ["#E50914", "#B20710", "#564D4D", "#831010", "#999999"]
-
-# Shared layout defaults
+# Shared layout defaults — Netflix dark theme
 _LAYOUT_DEFAULTS = dict(
     template="plotly_dark",
     height=300,
-    margin=dict(t=30, b=20, l=20, r=20),
+    margin=dict(t=40, b=20, l=20, r=20),
     paper_bgcolor="rgba(0,0,0,0)",
     plot_bgcolor="rgba(0,0,0,0)",
 )
@@ -38,156 +35,208 @@ def _empty_figure(message: str = "No data for selected filters") -> go.Figure:
     return fig
 
 
-def create_engagement_line(
-    watch_df: pd.DataFrame, users_df: pd.DataFrame
-) -> go.Figure:
-    """Weekly watch hours over time, segmented by subscription plan.
+# ─── Chart 1: Engagement Trend ──────────────────────────────────────
+# Q: "Is engagement improving over time? Are seasonal patterns visible?"
+# Maps to: Higher Engagement in the value chain
+# ML target from case study: P(completion)
 
-    Parameters
-    ----------
-    watch_df : filtered watch_history DataFrame
-    users_df : filtered users DataFrame (needed for subscription_plan)
+def create_engagement_trend(watch_df: pd.DataFrame) -> go.Figure:
+    """Monthly completion rate trend over time.
 
-    Returns
-    -------
-    Plotly Figure (line chart)
+    Shows the % of sessions where users watched ≥90% of content.
+    This is the key ML target P(completion) from the case study.
+    Seasonal patterns (holiday spikes, Feb dip) become visible.
     """
     if len(watch_df) == 0:
         return _empty_figure()
 
-    # Merge to get subscription_plan onto watch rows
-    merged = watch_df.merge(
-        users_df[["user_id", "subscription_plan"]], on="user_id", how="left"
-    )
+    df = watch_df.copy()
+    df["month"] = df["watch_date"].dt.to_period("M").dt.to_timestamp()
+    df["completed"] = df["progress_percentage"] >= 90
 
-    # Resample weekly: mean watch duration in hours per plan
-    merged["watch_hours"] = merged["watch_duration_minutes"] / 60.0
-    weekly = (
-        merged
-        .groupby([pd.Grouper(key="watch_date", freq="W"), "subscription_plan"])["watch_hours"]
+    monthly = (
+        df.groupby("month")
+        .agg(
+            completion_rate=("completed", "mean"),
+            avg_session_hrs=("watch_duration_minutes", lambda x: x.mean() / 60),
+        )
+        .reset_index()
+    )
+    monthly["completion_rate"] = (monthly["completion_rate"] * 100).round(1)
+    monthly["avg_session_hrs"] = monthly["avg_session_hrs"].round(2)
+
+    fig = go.Figure()
+
+    # Completion rate as main line
+    fig.add_trace(go.Scatter(
+        x=monthly["month"], y=monthly["completion_rate"],
+        mode="lines+markers",
+        name="Completion Rate (%)",
+        line=dict(color="#E50914", width=3),
+        marker=dict(size=6),
+        hovertemplate="%{x|%b %Y}<br>Completion: %{y:.1f}%<extra></extra>",
+    ))
+
+    # Avg session time as secondary line
+    fig.add_trace(go.Scatter(
+        x=monthly["month"], y=monthly["avg_session_hrs"],
+        mode="lines",
+        name="Avg Session (hrs)",
+        line=dict(color="#FF6B6B", width=2, dash="dot"),
+        yaxis="y2",
+        hovertemplate="%{x|%b %Y}<br>Session: %{y:.1f} hrs<extra></extra>",
+    ))
+
+    fig.update_layout(
+        **_LAYOUT_DEFAULTS,
+        title="Monthly Engagement: Completion Rate & Session Time",
+        yaxis=dict(title="Completion Rate (%)", showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
+        yaxis2=dict(title="Avg Session (hrs)", overlaying="y", side="right", showgrid=False),
+        legend=dict(orientation="h", yanchor="bottom", y=-0.35, xanchor="center", x=0.5),
+        hovermode="x unified",
+    )
+    fig.update_xaxes(showgrid=False)
+
+    return fig
+
+
+# ─── Chart 2: Churn by Segment ─────────────────────────────────────
+# Q: "Which subscription segments are at highest churn risk?"
+# Maps to: Lower Churn in the value chain
+# Case study Q2: "Under what conditions does the engine reduce churn?"
+
+def create_churn_by_plan(users_df: pd.DataFrame) -> go.Figure:
+    """Churn rate by subscription plan (vertical bar).
+
+    Shows that Basic subscribers churn ~14% while Premium+ churn ~3%.
+    Actionable: target retention campaigns at Basic tier.
+    """
+    if len(users_df) == 0:
+        return _empty_figure()
+
+    churn_data = (
+        users_df.groupby("subscription_plan", observed=True)["is_active"]
+        .apply(lambda x: round((~x).mean() * 100, 1))
+        .reset_index()
+    )
+    churn_data.columns = ["plan", "churn_rate"]
+
+    # Sort by churn rate descending for visual impact
+    churn_data = churn_data.sort_values("churn_rate", ascending=False)
+
+    # Color: red for high churn, green for low
+    colors = []
+    for rate in churn_data["churn_rate"]:
+        if rate > 10:
+            colors.append("#FF4136")  # red — critical
+        elif rate > 5:
+            colors.append("#FFDC00")  # yellow — warning
+        else:
+            colors.append("#2ECC40")  # green — healthy
+
+    fig = go.Figure(go.Bar(
+        x=churn_data["plan"],
+        y=churn_data["churn_rate"],
+        marker_color=colors,
+        text=churn_data["churn_rate"].apply(lambda v: f"{v:.1f}%"),
+        textposition="outside",
+        hovertemplate="%{x}<br>Churn: %{y:.1f}%<extra></extra>",
+    ))
+
+    fig.update_layout(
+        **_LAYOUT_DEFAULTS,
+        title="Churn Rate by Subscription Plan",
+        yaxis=dict(title="Churn Rate (%)", showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
+        xaxis=dict(title=""),
+    )
+    fig.update_xaxes(showgrid=False)
+
+    return fig
+
+
+# ─── Chart 3: Session Duration by Device ────────────────────────────
+# Q: "How do engagement patterns differ across devices?"
+# Maps to: Higher Engagement — identifies UX investment priorities
+# Case study variable: Device type → Avg. session duration
+
+def create_session_by_device(watch_df: pd.DataFrame) -> go.Figure:
+    """Average session duration by device type (horizontal bar).
+
+    Smart TV 2.57 hrs vs Mobile 0.85 hrs — big screen = longer engagement.
+    Actionable: optimize mobile UX for shorter, more satisfying sessions.
+    """
+    if len(watch_df) == 0:
+        return _empty_figure()
+
+    device_data = (
+        watch_df.groupby("device_type", observed=True)["watch_duration_minutes"]
         .mean()
+        .div(60)
+        .round(2)
+        .sort_values(ascending=True)
         .reset_index()
     )
-    weekly.columns = ["week", "subscription_plan", "avg_watch_hours"]
+    device_data.columns = ["device", "avg_hours"]
 
-    fig = px.line(
-        weekly, x="week", y="avg_watch_hours",
-        color="subscription_plan",
-        title="Weekly Watch Hours by Subscription Plan",
+    # Color gradient: longer = more green (good engagement)
+    colors = []
+    for hrs in device_data["avg_hours"]:
+        if hrs >= 2.0:
+            colors.append("#2ECC40")
+        elif hrs >= 1.5:
+            colors.append("#E50914")
+        elif hrs >= 1.0:
+            colors.append("#FFDC00")
+        else:
+            colors.append("#FF4136")
+
+    fig = go.Figure(go.Bar(
+        y=device_data["device"],
+        x=device_data["avg_hours"],
+        orientation="h",
+        marker_color=colors,
+        text=device_data["avg_hours"].apply(lambda v: f"{v:.1f} hrs"),
+        textposition="outside",
+        hovertemplate="%{y}<br>Avg: %{x:.2f} hrs<extra></extra>",
+    ))
+
+    fig.update_layout(
+        **_LAYOUT_DEFAULTS,
+        title="Avg Session Duration by Device",
+        xaxis=dict(title="Average Hours per Session", showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
+        yaxis=dict(title=""),
     )
-    fig.update_layout(**_LAYOUT_DEFAULTS)
-    fig.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3))
-    fig.update_xaxes(showgrid=False)
-    # Keep y-grid for readability on line chart
-    return fig
-
-
-def create_genre_bar(
-    watch_df: pd.DataFrame, movies_df: pd.DataFrame
-) -> go.Figure:
-    """Top 10 genres by total watch time (horizontal bar chart).
-
-    Parameters
-    ----------
-    watch_df : filtered watch_history DataFrame
-    movies_df : movies DataFrame (unfiltered, for genre lookup)
-
-    Returns
-    -------
-    Plotly Figure (horizontal bar chart)
-    """
-    if len(watch_df) == 0:
-        return _empty_figure()
-
-    merged = watch_df.merge(
-        movies_df[["movie_id", "genre_primary"]], on="movie_id", how="left"
-    )
-    merged["watch_hours"] = merged["watch_duration_minutes"] / 60.0
-
-    genre_totals = (
-        merged
-        .groupby("genre_primary", observed=True)["watch_hours"]
-        .sum()
-        .nlargest(10)
-        .sort_values(ascending=True)  # ascending for horizontal bar (highest at top)
-        .reset_index()
-    )
-    genre_totals.columns = ["genre", "total_hours"]
-
-    fig = px.bar(
-        genre_totals, x="total_hours", y="genre",
-        orientation="h", color="genre",
-        color_discrete_sequence=_GENRE_COLORS,
-        title="Top 10 Genres by Watch Time (Hours)",
-    )
-    fig.update_layout(**_LAYOUT_DEFAULTS)
-    fig.update_layout(showlegend=False)  # bar labels are self-explanatory
-    fig.update_xaxes(showgrid=False)
     fig.update_yaxes(showgrid=False)
+
     return fig
 
 
-def create_device_donut(watch_df: pd.DataFrame) -> go.Figure:
-    """Device type distribution by session count (donut chart).
+# ─── Chart 4: Recommendation Effectiveness ─────────────────────────
+# Q: "Which recommendation algorithm type drives the most clicks?"
+# Maps to: Better Predictions in the value chain
+# Case study Q1: "Do personalized recs increase viewing hours?"
 
-    Parameters
-    ----------
-    watch_df : filtered watch_history DataFrame
+def create_rec_effectiveness(recs_df: pd.DataFrame) -> go.Figure:
+    """Recommendation CTR by algorithm type (horizontal bar).
 
-    Returns
-    -------
-    Plotly Figure (donut/pie chart)
-    """
-    if len(watch_df) == 0:
-        return _empty_figure()
-
-    device_counts = (
-        watch_df["device_type"]
-        .value_counts()
-        .reset_index()
-    )
-    device_counts.columns = ["device_type", "count"]
-
-    fig = px.pie(
-        device_counts, names="device_type", values="count",
-        hole=0.4,
-        color_discrete_sequence=_DEVICE_COLORS,
-        title="Watch Sessions by Device",
-    )
-    fig.update_layout(**_LAYOUT_DEFAULTS)
-    fig.update_layout(legend=dict(orientation="h", yanchor="bottom", y=-0.3))
-    return fig
-
-
-def create_rec_effectiveness_bar(recs_df: pd.DataFrame) -> go.Figure:
-    """Recommendation CTR by algorithm type (horizontal bar chart).
-
-    Answers: "Which recommendation strategy works best?"
-    Directly tied to the Netflix recommendation engine case study.
-
-    Parameters
-    ----------
-    recs_df : filtered recommendation_logs DataFrame
-
-    Returns
-    -------
-    Plotly Figure (horizontal bar chart)
+    Personalized 37% >> Similar Users 13%.
+    Directly supports the Netflix recommendation engine case study:
+    invest in personalization, reduce reliance on cold-start approaches.
     """
     if len(recs_df) == 0:
         return _empty_figure()
 
     ctr_by_type = (
-        recs_df
-        .groupby("recommendation_type", observed=True)["was_clicked"]
+        recs_df.groupby("recommendation_type", observed=True)["was_clicked"]
         .mean()
         .mul(100)
         .round(1)
         .sort_values(ascending=True)
         .reset_index()
     )
-    ctr_by_type.columns = ["recommendation_type", "ctr_percent"]
+    ctr_by_type.columns = ["type", "ctr"]
 
-    # Rename for readability
+    # Readable names
     name_map = {
         "personalized": "Personalized",
         "genre_based": "Genre-Based",
@@ -195,27 +244,37 @@ def create_rec_effectiveness_bar(recs_df: pd.DataFrame) -> go.Figure:
         "new_releases": "New Releases",
         "similar_users": "Similar Users",
     }
-    ctr_by_type["recommendation_type"] = ctr_by_type["recommendation_type"].map(
-        lambda x: name_map.get(x, x)
-    )
+    ctr_by_type["type"] = ctr_by_type["type"].map(lambda x: name_map.get(x, x))
 
-    _REC_COLORS = {
-        "Personalized": "#2ECC40",
-        "Genre-Based": "#E50914",
-        "Trending": "#FF6B6B",
-        "New Releases": "#B20710",
-        "Similar Users": "#564D4D",
-    }
+    # Color: best algorithm green, worst red
+    max_ctr = ctr_by_type["ctr"].max()
+    min_ctr = ctr_by_type["ctr"].min()
+    colors = []
+    for ctr in ctr_by_type["ctr"]:
+        ratio = (ctr - min_ctr) / (max_ctr - min_ctr) if max_ctr > min_ctr else 0.5
+        if ratio > 0.7:
+            colors.append("#2ECC40")
+        elif ratio > 0.3:
+            colors.append("#E50914")
+        else:
+            colors.append("#564D4D")
 
-    fig = px.bar(
-        ctr_by_type, x="ctr_percent", y="recommendation_type",
+    fig = go.Figure(go.Bar(
+        y=ctr_by_type["type"],
+        x=ctr_by_type["ctr"],
         orientation="h",
-        color="recommendation_type",
-        color_discrete_map=_REC_COLORS,
-        title="Recommendation CTR by Algorithm Type (%)",
+        marker_color=colors,
+        text=ctr_by_type["ctr"].apply(lambda v: f"{v:.1f}%"),
+        textposition="outside",
+        hovertemplate="%{y}<br>CTR: %{x:.1f}%<extra></extra>",
+    ))
+
+    fig.update_layout(
+        **_LAYOUT_DEFAULTS,
+        title="Recommendation CTR by Algorithm Type",
+        xaxis=dict(title="Click-Through Rate (%)", showgrid=True, gridcolor="rgba(255,255,255,0.1)"),
+        yaxis=dict(title=""),
     )
-    fig.update_layout(**_LAYOUT_DEFAULTS)
-    fig.update_layout(showlegend=False)
-    fig.update_xaxes(showgrid=False, title_text="Click-Through Rate (%)")
-    fig.update_yaxes(showgrid=False, title_text="")
+    fig.update_yaxes(showgrid=False)
+
     return fig
