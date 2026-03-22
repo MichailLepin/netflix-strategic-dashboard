@@ -43,11 +43,11 @@ Plans:
   2. Sidebar shows 4 filter widgets (genre, subscription type, device type, date range) and selecting any filter instantly updates the displayed values
   3. All 4 KPI tiles (Average Daily Watch Time, Content Completion Rate, Recommendation CTR, Churn Rate) display computed scalar values with alarm threshold coloring (red/yellow/green)
   4. The column grid layout renders without vertical scrolling on a 1080p screen at 100% zoom
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: App shell, config, Netflix theme, and layout skeleton
-- [ ] 02-02: Filter sidebar and KPI computation + tile rendering
+- [ ] 02-01-PLAN.md — App shell, config.toml dark theme, Netflix branding, and layout skeleton
+- [ ] 02-02-PLAN.md — Filter sidebar, KPI computation with tests, and alarm-colored tile rendering
 
 ### Phase 3: Charts and Complete Layout
 **Goal**: All 4 Plotly charts are implemented and placed in the column grid, producing the finished single-screen dashboard that meets every visual assignment requirement.
