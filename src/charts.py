@@ -159,57 +159,63 @@ def create_device_donut(watch_df: pd.DataFrame) -> go.Figure:
     return fig
 
 
-def create_content_type_bar(
-    watch_df: pd.DataFrame, movies_df: pd.DataFrame
-) -> go.Figure:
-    """Watch sessions by content type (horizontal bar chart).
+def create_rec_effectiveness_bar(recs_df: pd.DataFrame) -> go.Figure:
+    """Recommendation CTR by algorithm type (horizontal bar chart).
 
-    Shows how viewing time distributes across Movies, TV Series,
-    Documentaries, etc. Responds meaningfully to genre/device/date filters.
+    Answers: "Which recommendation strategy works best?"
+    Directly tied to the Netflix recommendation engine case study.
 
     Parameters
     ----------
-    watch_df : filtered watch_history DataFrame
-    movies_df : movies DataFrame (for content_type lookup)
+    recs_df : filtered recommendation_logs DataFrame
 
     Returns
     -------
     Plotly Figure (horizontal bar chart)
     """
-    if len(watch_df) == 0:
+    if len(recs_df) == 0:
         return _empty_figure()
 
-    merged = watch_df.merge(
-        movies_df[["movie_id", "content_type"]], on="movie_id", how="left"
-    )
-    merged["watch_hours"] = merged["watch_duration_minutes"] / 60.0
-
-    type_totals = (
-        merged
-        .groupby("content_type", observed=True)["watch_hours"]
-        .sum()
+    ctr_by_type = (
+        recs_df
+        .groupby("recommendation_type", observed=True)["was_clicked"]
+        .mean()
+        .mul(100)
+        .round(1)
         .sort_values(ascending=True)
         .reset_index()
     )
-    type_totals.columns = ["content_type", "total_hours"]
+    ctr_by_type.columns = ["recommendation_type", "ctr_percent"]
 
-    _TYPE_COLORS = {
-        "Movie": "#E50914",
-        "TV Series": "#B20710",
-        "Documentary": "#831010",
-        "Stand-up Comedy": "#FF6B6B",
-        "Limited Series": "#564D4D",
+    # Rename for readability
+    name_map = {
+        "personalized": "Personalized",
+        "genre_based": "Genre-Based",
+        "trending": "Trending",
+        "new_releases": "New Releases",
+        "similar_users": "Similar Users",
+    }
+    ctr_by_type["recommendation_type"] = ctr_by_type["recommendation_type"].map(
+        lambda x: name_map.get(x, x)
+    )
+
+    _REC_COLORS = {
+        "Personalized": "#2ECC40",
+        "Genre-Based": "#E50914",
+        "Trending": "#FF6B6B",
+        "New Releases": "#B20710",
+        "Similar Users": "#564D4D",
     }
 
     fig = px.bar(
-        type_totals, x="total_hours", y="content_type",
+        ctr_by_type, x="ctr_percent", y="recommendation_type",
         orientation="h",
-        color="content_type",
-        color_discrete_map=_TYPE_COLORS,
-        title="Watch Hours by Content Type",
+        color="recommendation_type",
+        color_discrete_map=_REC_COLORS,
+        title="Recommendation CTR by Algorithm Type (%)",
     )
     fig.update_layout(**_LAYOUT_DEFAULTS)
     fig.update_layout(showlegend=False)
-    fig.update_xaxes(showgrid=False)
-    fig.update_yaxes(showgrid=False)
+    fig.update_xaxes(showgrid=False, title_text="Click-Through Rate (%)")
+    fig.update_yaxes(showgrid=False, title_text="")
     return fig

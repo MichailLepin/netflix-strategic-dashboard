@@ -10,7 +10,7 @@ st.set_page_config(
 from src.data_loader import load_data
 from src.filter import apply_filters
 from src.kpis import compute_kpis, get_alarm_level
-from src.charts import create_engagement_line, create_genre_bar, create_device_donut, create_content_type_bar
+from src.charts import create_engagement_line, create_genre_bar, create_device_donut, create_rec_effectiveness_bar
 
 # Load data (cached)
 data = load_data()
@@ -63,8 +63,8 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("Alarm Thresholds")
     st.markdown("""
-    **Total Watch Hours**
-    - :green[Green] > 50K hrs | :orange[Yellow] 20-50K hrs | :red[Red] < 20K hrs
+    **Avg Session Time**
+    - :green[Green] > 1.5 hrs | :orange[Yellow] 1-1.5 hrs | :red[Red] < 1 hr
     - *Action: Evaluate content engagement strategies*
 
     **Completion Rate**
@@ -113,8 +113,8 @@ ALARM_COLORS = {"green": "#2ECC40", "yellow": "#FFDC00", "red": "#FF4136"}
 kpi_config = [
     {
         "key": "avg_watch_hours",
-        "label": "Total Watch Hours",
-        "format": lambda v: f"{v:,.0f} hrs",
+        "label": "Avg Session Time",
+        "format": lambda v: f"{v:.1f} hrs",
         "delta_color": "normal",
     },
     {
@@ -150,10 +150,10 @@ for i, (col, cfg) in enumerate(zip(kpi_cols, kpi_config)):
     with col:
         if filters_active:
             delta = round(value - overall, 1)
-            if "hrs" in cfg["format"](0) and abs(delta) > 100:
-                delta_str = f"{delta:+,.0f} hrs"
-            elif "%" in cfg["format"](0):
+            if "%" in cfg["format"](0):
                 delta_str = f"{delta:+.1f}%"
+            elif "hrs" in cfg["format"](0):
+                delta_str = f"{delta:+.1f} hrs"
             else:
                 delta_str = f"{delta:+.1f}"
             st.metric(
@@ -207,5 +207,5 @@ with chart_col3:
     fig_donut = create_device_donut(filtered["watch"])
     st.plotly_chart(fig_donut, use_container_width=True)
 with chart_col4:
-    fig_content = create_content_type_bar(filtered["watch"], data["movies"])
-    st.plotly_chart(fig_content, use_container_width=True)
+    fig_recs = create_rec_effectiveness_bar(filtered["recs"])
+    st.plotly_chart(fig_recs, use_container_width=True)
