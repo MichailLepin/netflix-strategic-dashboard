@@ -34,9 +34,9 @@
 
 ### Data Pipeline
 
-- [ ] **DATA-01**: Download and load Netflix 2025 User Behavior Dataset (6 tables)
-- [ ] **DATA-02**: Clean data (handle missing values, duplicates, outliers)
-- [ ] **DATA-03**: Join tables with validated keys
+- [x] **DATA-01**: Download and load Netflix 2025 User Behavior Dataset (6 tables)
+- [x] **DATA-02**: Clean data (handle missing values, duplicates, outliers)
+- [x] **DATA-03**: Join tables with validated keys
 
 ### Deliverables
 
@@ -75,9 +75,9 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Complete |
+| DATA-02 | Phase 1 | Complete |
+| DATA-03 | Phase 1 | Complete |
 | DASH-01 | Phase 2 | Pending |
 | DASH-02 | Phase 2 | Pending |
 | KPI-01 | Phase 2 | Pending |
