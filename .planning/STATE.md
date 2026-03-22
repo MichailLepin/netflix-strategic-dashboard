@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in_progress
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-22T17:40:59.470Z"
-last_activity: 2026-03-22 — Phase 2 Plan 1 executed, dashboard skeleton with Netflix branding
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-22T17:45:00Z"
+last_activity: 2026-03-22 — Phase 2 Plan 2 executed, filters and KPI tiles with alarm coloring
 progress:
   total_phases: 4
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 3
-  completed_plans: 2
-  percent: 67
+  completed_plans: 3
+  percent: 100
 ---
 
 # Project State
@@ -21,16 +21,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-22)
 
 **Core value:** Enable data-driven decisions about content strategy and user retention by surfacing engagement, recommendation effectiveness, and churn risks in a single-screen Streamlit dashboard.
-**Current focus:** Phase 2 — Dashboard Skeleton, Filters & KPIs
+**Current focus:** Phase 2 complete -- ready for Phase 3
 
 ## Current Position
 
-Phase: 2 of 4 (Dashboard Skeleton, Filters & KPIs)
-Plan: 1 of 2 in current phase -- COMPLETE
-Status: Plan 02-01 complete, ready for Plan 02-02
-Last activity: 2026-03-22 — Phase 2 Plan 1 executed, dashboard skeleton with Netflix branding
+Phase: 2 of 4 (Dashboard Skeleton, Filters & KPIs) -- COMPLETE
+Plan: 2 of 2 in current phase -- COMPLETE
+Status: Phase 2 complete, all filters and KPIs wired
+Last activity: 2026-03-22 — Phase 2 Plan 2 executed, filters and KPI tiles with alarm coloring
 
-Progress: [███████░░░] 67%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Progress: [███████░░░] 67%
 *Updated after each plan completion*
 | Phase 01 P01 | 5min | 3 tasks | 8 files |
 | Phase 02 P01 | 1min | 2 tasks | 3 files |
+| Phase 02 P02 | 3min | 3 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -70,6 +71,9 @@ Recent decisions affecting current work:
 - [Phase 01]: All join match rates 100% - no orphan keys in synthetic data
 - [Phase 02]: Text-based NETFLIX logo instead of PNG to avoid license issues for academic work
 - [Phase 02]: Custom CSS injection for metric tile styling with Netflix red left border
+- [Phase 02]: Alarm colors via CSS nth-of-type selectors on stMetric data-testid
+- [Phase 02]: Delta indicators hidden when no filters active; churn uses inverse delta_color
+- [Phase 02]: Date filtering on watch_date column (not timestamp); Rec CTR on was_clicked (not clicked)
 
 ### Pending Todos
 
@@ -83,6 +87,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-22T17:40:59.467Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-03-22T17:45:00Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None

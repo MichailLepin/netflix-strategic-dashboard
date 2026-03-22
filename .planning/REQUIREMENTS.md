@@ -13,10 +13,10 @@
 
 ### KPIs
 
-- [ ] **KPI-01**: User sees Average Daily Watch Time (hours) as scorecard tile
-- [ ] **KPI-02**: User sees Content Completion Rate (%) as scorecard tile
-- [ ] **KPI-03**: User sees Recommendation Click-Through Rate (%) as scorecard tile
-- [ ] **KPI-04**: User sees Churn Rate (%) as scorecard tile
+- [x] **KPI-01**: User sees Average Daily Watch Time (hours) as scorecard tile
+- [x] **KPI-02**: User sees Content Completion Rate (%) as scorecard tile
+- [x] **KPI-03**: User sees Recommendation Click-Through Rate (%) as scorecard tile
+- [x] **KPI-04**: User sees Churn Rate (%) as scorecard tile
 
 ### Visualizations
 
@@ -27,10 +27,10 @@
 
 ### Filters
 
-- [ ] **FLT-01**: User can filter by genre
-- [ ] **FLT-02**: User can filter by subscription type (Basic/Standard/Premium)
-- [ ] **FLT-03**: User can filter by device type
-- [ ] **FLT-04**: User can filter by time period (date range)
+- [x] **FLT-01**: User can filter by genre
+- [x] **FLT-02**: User can filter by subscription type (Basic/Standard/Premium)
+- [x] **FLT-03**: User can filter by device type
+- [x] **FLT-04**: User can filter by time period (date range)
 
 ### Data Pipeline
 
@@ -80,14 +80,14 @@
 | DATA-03 | Phase 1 | Complete |
 | DASH-01 | Phase 2 | Complete |
 | DASH-02 | Phase 2 | Complete |
-| KPI-01 | Phase 2 | Pending |
-| KPI-02 | Phase 2 | Pending |
-| KPI-03 | Phase 2 | Pending |
-| KPI-04 | Phase 2 | Pending |
-| FLT-01 | Phase 2 | Pending |
-| FLT-02 | Phase 2 | Pending |
-| FLT-03 | Phase 2 | Pending |
-| FLT-04 | Phase 2 | Pending |
+| KPI-01 | Phase 2 | Complete |
+| KPI-02 | Phase 2 | Complete |
+| KPI-03 | Phase 2 | Complete |
+| KPI-04 | Phase 2 | Complete |
+| FLT-01 | Phase 2 | Complete |
+| FLT-02 | Phase 2 | Complete |
+| FLT-03 | Phase 2 | Complete |
+| FLT-04 | Phase 2 | Complete |
 | VIZ-01 | Phase 3 | Pending |
 | VIZ-02 | Phase 3 | Pending |
 | VIZ-03 | Phase 3 | Pending |
