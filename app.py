@@ -60,6 +60,26 @@ with st.sidebar:
         max_value=date_max,
     )
 
+    st.markdown("---")
+    st.subheader("Alarm Thresholds")
+    st.markdown("""
+    **Avg Watch Time**
+    - :green[Green] > 2 hrs | :orange[Yellow] 1-2 hrs | :red[Red] < 1 hr
+    - *Action: Evaluate content engagement strategies*
+
+    **Completion Rate**
+    - :green[Green] > 60% | :orange[Yellow] 40-60% | :red[Red] < 40%
+    - *Action: Review content quality and pacing*
+
+    **Rec Click-Through**
+    - :green[Green] > 20% | :orange[Yellow] 10-20% | :red[Red] < 10%
+    - *Action: Tune recommendation algorithm*
+
+    **Churn Rate**
+    - :green[Green] < 15% | :orange[Yellow] 15-25% | :red[Red] > 25%
+    - *Action: Investigate retention strategies*
+    """)
+
 # --- Apply Filters ---
 if len(date_range) != 2:
     st.sidebar.warning("Select both start and end dates")
