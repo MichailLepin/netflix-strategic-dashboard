@@ -63,8 +63,8 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("Alarm Thresholds")
     st.markdown("""
-    **Avg Watch Time**
-    - :green[Green] > 2 hrs | :orange[Yellow] 1-2 hrs | :red[Red] < 1 hr
+    **Total Watch Hours**
+    - :green[Green] > 50K hrs | :orange[Yellow] 20-50K hrs | :red[Red] < 20K hrs
     - *Action: Evaluate content engagement strategies*
 
     **Completion Rate**
@@ -113,8 +113,8 @@ ALARM_COLORS = {"green": "#2ECC40", "yellow": "#FFDC00", "red": "#FF4136"}
 kpi_config = [
     {
         "key": "avg_watch_hours",
-        "label": "Avg Watch Time",
-        "format": lambda v: f"{v:.1f} hrs",
+        "label": "Total Watch Hours",
+        "format": lambda v: f"{v:,.0f} hrs",
         "delta_color": "normal",
     },
     {
@@ -150,9 +150,12 @@ for i, (col, cfg) in enumerate(zip(kpi_cols, kpi_config)):
     with col:
         if filters_active:
             delta = round(value - overall, 1)
-            delta_str = f"{delta:+.1f}" if "hours" not in cfg["format"](0) else f"{delta:+.1f} hrs"
-            if "%" in cfg["format"](0):
+            if "hrs" in cfg["format"](0) and abs(delta) > 100:
+                delta_str = f"{delta:+,.0f} hrs"
+            elif "%" in cfg["format"](0):
                 delta_str = f"{delta:+.1f}%"
+            else:
+                delta_str = f"{delta:+.1f}"
             st.metric(
                 label=cfg["label"],
                 value=cfg["format"](value),

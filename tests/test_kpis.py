@@ -67,7 +67,7 @@ def test_alarm_color_thresholds():
     assert get_alarm_level("rec_ctr", 15) == "yellow"
     assert get_alarm_level("rec_ctr", 5) == "red"
 
-    # Avg Watch Hours: green > 2, yellow 1-2, red < 1
-    assert get_alarm_level("avg_watch_hours", 3) == "green"
-    assert get_alarm_level("avg_watch_hours", 1.5) == "yellow"
-    assert get_alarm_level("avg_watch_hours", 0.5) == "red"
+    # Total Watch Hours: green > 50000, yellow 20000-50000, red < 20000
+    assert get_alarm_level("avg_watch_hours", 60000) == "green"
+    assert get_alarm_level("avg_watch_hours", 30000) == "yellow"
+    assert get_alarm_level("avg_watch_hours", 10000) == "red"

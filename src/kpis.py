@@ -23,9 +23,9 @@ def compute_kpis(filtered: dict[str, pd.DataFrame]) -> dict[str, float]:
     watch = filtered["watch"]
     recs = filtered["recs"]
 
-    # KPI-01: Average Daily Watch Time (hours)
+    # KPI-01: Total Watch Hours (sum of all sessions)
     if len(watch) > 0:
-        avg_watch_hours = round(watch["watch_duration_minutes"].mean() / 60.0, 1)
+        avg_watch_hours = round(watch["watch_duration_minutes"].sum() / 60.0, 1)
     else:
         avg_watch_hours = 0.0
 
@@ -89,9 +89,9 @@ def get_alarm_level(kpi_name: str, value: float) -> str:
         else:
             return "red"
     elif kpi_name == "avg_watch_hours":
-        if value > 2:
+        if value > 50000:
             return "green"
-        elif value >= 1:
+        elif value >= 20000:
             return "yellow"
         else:
             return "red"
